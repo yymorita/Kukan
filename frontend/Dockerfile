@@ -6,5 +6,5 @@ COPY package*.json ./
 RUN npm install
 
 # 残りをコピーしてビルド
-COPY front/ ./ 
+COPY frontend/ ./ 
 RUN npm run build
