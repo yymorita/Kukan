@@ -9,20 +9,20 @@ const wss = new WebSocket.Server({ server })
 
 // 静的ファイル配信やAPIルートなど（必要に応じて）
 app.get('/', (req, res) => {
-  res.send('Kukan WebSocketサーバ起動中')
+  res.send('Kukan WebSocket starting.')
 })
 
 // WebSocketクライアント（Vue）一覧
 const clients = new Set()
 
 wss.on('connection', (ws, req) => {
-  console.log('🌐 クライアント接続')
+  console.log('🌐 Client Connected.')
   clients.add(ws)
 
   ws.on('message', (message) => {
     try {
       const data = JSON.parse(message)
-      console.log('📥 受信:', data)
+      console.log('📥 RECEIVE:', data)
 
       // 快適度判定ロジック
       const isComfortable =
@@ -45,12 +45,12 @@ wss.on('connection', (ws, req) => {
         }
       })
     } catch (err) {
-      console.error('❌ JSONパースエラー:', err.message)
+      console.error('❌ JSON Parse error:', err.message)
     }
   })
 
   ws.on('close', () => {
-    console.log('❌ クライアント切断')
+    console.log('❌ Client disconnected.')
     clients.delete(ws)
   })
 })
@@ -58,5 +58,5 @@ wss.on('connection', (ws, req) => {
 // サーバ起動
 const PORT = 8080
 server.listen(PORT, () => {
-  console.log(`🚀 WebSocket + Express サーバ起動: http://localhost:${PORT}`)
+  console.log(`🚀 WebSocket + Express Server started: http://localhost:${PORT}`)
 })
