@@ -40,8 +40,8 @@ let socket = null
 onMounted(() => {
   const WS_URL =
   import.meta.env.MODE === 'development'
-    ? 'ws://localhost:8080/ws'
-    : 'ws://${window.location.host}/ws/'
+    ? 'ws://localhost:8080/ws/'
+    : `ws://${window.location.host}/ws/`
 
   const socket = new WebSocket(WS_URL)
 
