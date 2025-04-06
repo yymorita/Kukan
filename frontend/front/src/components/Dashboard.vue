@@ -28,7 +28,7 @@ const isComfortable = ref(false)
 let socket = null
 
 onMounted(() => {
-  socket = new WebSocket('ws://localhost:8080')
+  socket = new WebSocket(`ws://${window.location.host}/ws/`)
 
   socket.onopen = () => {
     console.log('✅ WebSocket connected')
