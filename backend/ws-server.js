@@ -1,11 +1,12 @@
 // Node.js WebSocket + Expressサーバ
-const express = require('express')
-const http = require('http')
-const WebSocket = require('ws')
+import express from 'express'
+import http from 'http'
+import { WebSocketServer } from 'ws'
+import { insertReading } from './db.js'
 
 const app = express()
 const server = http.createServer(app)
-const wss = new WebSocket.Server({ server })
+const wss = new WebSocketServer({ server })
 
 // 静的ファイル配信やAPIルートなど（必要に応じて）
 app.get('/', (req, res) => {
@@ -16,12 +17,13 @@ app.get('/', (req, res) => {
 const clients = new Set()
 
 wss.on('connection', (ws, req) => {
-  console.log('🌐 Client Connected.')
+  console.log('🌐 Web Socket Client Connected.')
   clients.add(ws)
 
   ws.on('message', (message) => {
     try {
-      const data = JSON.parse(message)
+      const data = JSON.parse(message.toString())
+      console.log("📦 Raw data:", message.toString())
       console.log('📥 RECEIVE:', data)
 
       // 快適度判定ロジック
@@ -33,11 +35,18 @@ wss.on('connection', (ws, req) => {
         sensor_id: data.sensor_id,
         temperature: data.temperature,
         humidity: data.humidity,
+        pressure: data.pressure,
+        gas: data.gas,
         isComfortable: isComfortable,
         message: isComfortable ? 'Comfortable' : 'Unconfortable',
         timestamp: data.timestamp,
       }
-
+      const temperature = data.temperature
+      const humidity = data.humidity
+      const pressure = data.pressure
+      const gas = data.gas
+      insertReading({ temperature, humidity, pressure, gas })
+      console.log(`💾 Saving DB: ${temperature}°C / ${humidity}% / ${pressure}hPa / ${gas} ohms`)
       // フロントエンド接続クライアントにブロードキャスト
       clients.forEach(client => {
         if (client.readyState === WebSocket.OPEN) {
