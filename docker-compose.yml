@@ -4,7 +4,7 @@ services:
   frontend:
     build:
       context: ./frontend
-    working_dir: /app
+    working_dir: /app/front
     volumes:
       - ./frontend:/app
     command: npm run build
