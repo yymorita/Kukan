@@ -2,8 +2,7 @@ FROM node:20-alpine
 WORKDIR /app
 
 # 依存ファイルだけ先にコピーしてキャッシュ利用
-COPY front/package*.json ./front/
-WORKDIR /app/front
+COPY package*.json ./
 RUN npm install
 
 # 残りをコピーしてビルド
