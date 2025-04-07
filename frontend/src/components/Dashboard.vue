@@ -2,31 +2,25 @@
   <div class="dashboard">
     <h1 class="title">Kukan</h1>
     <div class="sensor-card">
-      <div class="value">
-        <span class="label">Temperature</span>
-        <span class="data">{{ temperature }} ℃</span>
-      </div>
-      <div class="value">
-        <span class="label">Humidity</span>
-        <span class="data">{{ humidity }} %</span>
-      </div>
-      <div class="value">
-        <span class="label">Pressure</span>
-        <span class="data">{{ pressure }} hPa</span>
-      </div>
-      <div class="value">
-        <span class="label">Gas</span>
-        <span class="data">{{ gas }} Ω</span>
-      </div>
+      <div class="value"><span class="label">Temperature</span><span class="data">{{ temperature }} ℃</span></div>
+      <div class="value"><span class="label">Humidity</span><span class="data">{{ humidity }} %</span></div>
+      <div class="value"><span class="label">Pressure</span><span class="data">{{ pressure }} hPa</span></div>
+      <div class="value"><span class="label">Gas</span><span class="data">{{ gas }} Ω</span></div>
       <div class="status" :class="{ comfortable: isComfortable, uncomfortable: !isComfortable }">
         {{ statusMessage }}
       </div>
     </div>
+    <LineChart
+      :temperatureHistory="temperatureHistory.slice()"
+      :humidityHistory="humidityHistory.slice()"
+      :labels="labels.slice()"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import LineChart from './LineChart.vue'
 
 const temperature = ref(0)
 const humidity = ref(0)
@@ -34,6 +28,10 @@ const pressure = ref(0)
 const gas = ref(0)
 const statusMessage = ref('')
 const isComfortable = ref(false)
+
+const labels = ref([])
+const temperatureHistory = ref([])
+const humidityHistory = ref([])
 
 let socket = null
 
@@ -58,6 +56,17 @@ onMounted(() => {
     gas.value = data.gas
     statusMessage.value = data.message
     isComfortable.value = data.isComfortable
+
+    const timestamp = new Date(data.timestamp).toLocaleTimeString()
+    labels.value.push(timestamp)
+    temperatureHistory.value.push(data.temperature)
+    humidityHistory.value.push(data.humidity)
+
+    if (labels.value.length > 30) {
+      labels.value.shift()
+      temperatureHistory.value.shift()
+      humidityHistory.value.shift()
+    }
   }
 
   socket.onerror = (err) => {
