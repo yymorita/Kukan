@@ -4,6 +4,7 @@ services:
   frontend:
     build:
       context: ./frontend
+    container_name: kukan-frontend
     working_dir: /app
     volumes:
       - ./frontend:/app
@@ -12,6 +13,7 @@ services:
   backend:
     build:
       context: ./backend
+    container_name: kukan-backend
     ports:
       - "8080:8080"
     volumes:
@@ -22,6 +24,7 @@ services:
   nginx:
     build:
       context: ./nginx
+    container_name: kukan-nginx
     ports:
       - "80:80"
     depends_on:

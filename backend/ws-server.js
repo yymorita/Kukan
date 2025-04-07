@@ -1,11 +1,12 @@
 // Node.js WebSocket + Expressサーバ
-const express = require('express')
-const http = require('http')
-const WebSocket = require('ws')
+import express from 'express'
+import http from 'http'
+import { WebSocketServer } from 'ws'
+// import { insertReading } from './db.js'
 
 const app = express()
 const server = http.createServer(app)
-const wss = new WebSocket.Server({ server })
+const wss = new WebSocketServer({ server , path: '/ws' })
 
 // 静的ファイル配信やAPIルートなど（必要に応じて）
 app.get('/', (req, res) => {
@@ -16,13 +17,15 @@ app.get('/', (req, res) => {
 const clients = new Set()
 
 wss.on('connection', (ws, req) => {
-  console.log('🌐 Client Connected.')
+  console.log('?? HTTP upgrade request to:', req.url)
+  console.log('?? Web Socket Client Connected.')
   clients.add(ws)
 
   ws.on('message', (message) => {
     try {
-      const data = JSON.parse(message)
-      console.log('📥 RECEIVE:', data)
+      const data = JSON.parse(message.toString())
+      console.log("?? Raw data:", message.toString())
+      console.log('?? RECEIVE:', data)
 
       // 快適度判定ロジック
       const isComfortable =
@@ -39,20 +42,25 @@ wss.on('connection', (ws, req) => {
         message: isComfortable ? 'Comfortable' : 'Unconfortable',
         timestamp: data.timestamp,
       }
-
+      const temperature = data.temperature
+      const humidity = data.humidity
+      const pressure = data.pressure
+      const gas = data.gas
+      // insertReading({ temperature, humidity, pressure, gas })
+      // console.log(`?? Saving DB: ${temperature}°C / ${humidity}% / ${pressure}hPa / ${gas} ohms`)
       // フロントエンド接続クライアントにブロードキャスト
       clients.forEach(client => {
-        if (client.readyState === WebSocket.OPEN) {
+        if (client.readyState === ws.OPEN) {
           client.send(JSON.stringify(response))
         }
       })
     } catch (err) {
-      console.error('❌ JSON Parse error:', err.message)
+      console.error('? JSON Parse error:', err.message)
     }
   })
 
   ws.on('close', () => {
-    console.log('❌ Client disconnected.')
+    console.log('? Client disconnected.')
     clients.delete(ws)
   })
 })
@@ -60,5 +68,5 @@ wss.on('connection', (ws, req) => {
 // サーバ起動
 const PORT = 8080
 server.listen(PORT, () => {
-  console.log(`🚀 WebSocket + Express Server started: http://localhost:${PORT}`)
+  console.log(`?? WebSocket + Express Server started: http://localhost:${PORT}`)
 })
