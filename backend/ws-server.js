@@ -2,7 +2,7 @@
 import express from 'express'
 import http from 'http'
 import { WebSocketServer } from 'ws'
-// import { insertReading } from './db.js'
+import { insertReading } from './db.js'
 
 const app = express()
 const server = http.createServer(app)
@@ -46,8 +46,8 @@ wss.on('connection', (ws, req) => {
       const humidity = data.humidity
       const pressure = data.pressure
       const gas = data.gas
-      // insertReading({ temperature, humidity, pressure, gas })
-      // console.log(`?? Saving DB: ${temperature}°C / ${humidity}% / ${pressure}hPa / ${gas} ohms`)
+      insertReading({ temperature, humidity, pressure, gas })
+      console.log(`?? Saving DB: ${temperature}°C / ${humidity}% / ${pressure}hPa / ${gas} ohms`)
       // フロントエンド接続クライアントにブロードキャスト
       clients.forEach(client => {
         if (client.readyState === ws.OPEN) {
