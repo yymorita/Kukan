@@ -1,7 +1,18 @@
 @import './base.css';
 
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #f9fafb;
+}
+
 #app {
-  max-width: 1280px;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  max-width: 1980px;
   margin: 0 auto;
   padding: 2rem;
   font-weight: normal;
