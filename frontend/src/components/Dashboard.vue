@@ -10,17 +10,23 @@
         {{ statusMessage }}
       </div>
     </div>
-    <LineChart
+    <LineChartTempHum
       :temperatureHistory="temperatureHistory"
       :humidityHistory="humidityHistory"
       :labels="labels"
-/>
+    />
+    <LineChartPressGas
+      :pressureHistory="pressureHistory"
+      :gasHistory="gasHistory"
+      :labels="labels"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import LineChart from './LineChart.vue'
+import LineChartTempHum from './LineChartTempHum.vue'
+import LineChartPressGas from './LineChartPressGas.vue'
 
 const temperature = ref(0)
 const humidity = ref(0)
@@ -32,6 +38,8 @@ const isComfortable = ref(false)
 const labels = ref([])
 const temperatureHistory = ref([])
 const humidityHistory = ref([])
+const pressureHistory = ref([])
+const gasHistory = ref([])
 
 let socket = null
 
@@ -61,11 +69,15 @@ onMounted(() => {
     labels.value.push(timestamp)
     temperatureHistory.value.push(data.temperature)
     humidityHistory.value.push(data.humidity)
+    pressureHistory.value.push(data.pressure)
+    gasHistory.value.push(data.gas)
 
     if (labels.value.length > 60) {
       labels.value.shift()
       temperatureHistory.value.shift()
       humidityHistory.value.shift()
+      pressureHistory.value.shift()
+      gasHistory.value.shift()
     }
   }
 
@@ -85,25 +97,14 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-body, html {
-  height: 100%;
-  margin: 0;
-}
-
-#app {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  padding: 20rem 10rem;
-}
-
 .dashboard {
+  max-width: clamp(600px, 90vw, 960px);
   font-family: 'Helvetica Neue', sans-serif;
   text-align: center;
   padding: 2vmax;
   background-color: #f9fafb;
   min-height: 100vh;
+  max-width: 1980px;
   width: 100%;
 }
 
