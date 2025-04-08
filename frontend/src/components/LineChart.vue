@@ -1,76 +1,68 @@
+<template>
+  <div style="height: 300px;">
+    <Line :data="chartData" :options="chartOptions" />
+  </div>
+</template>
+
 <script setup>
 import { Line } from 'vue-chartjs'
 import {
   Chart as ChartJS,
+  LineElement,
+  PointElement,
+  LinearScale,
+  CategoryScale,
   Title,
   Tooltip,
-  Legend,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
+  Legend
 } from 'chart.js'
-import { ref, computed, toRef } from 'vue'
+import { computed } from 'vue'
 
 ChartJS.register(
+  LineElement,
+  PointElement,
+  LinearScale,
+  CategoryScale,
   Title,
   Tooltip,
-  Legend,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement
+  Legend
 )
 
 const props = defineProps({
-  temperatureHistory: Array,
-  humidityHistory: Array,
-  labels: Array,
+  temperatureHistory: { type: Array, default: () => [] },
+  humidityHistory: { type: Array, default: () => [] },
+  labels: { type: Array, default: () => [] },
 })
 
-// keyをラベル文字列に依存させる（※履歴が変わったときに再描画）
-const chartKey = computed(() => props.labels.join(','))
-
+// 🔐 props を shallow copy
 const chartData = computed(() => ({
-  labels: props.labels,
+  labels: props.labels.slice(),
   datasets: [
     {
       label: 'Temperature (°C)',
+      data: props.temperatureHistory.slice(),
       borderColor: '#f87171',
       backgroundColor: 'rgba(248,113,113,0.2)',
-      data: props.temperatureHistory,
       tension: 0.4,
     },
     {
       label: 'Humidity (%)',
+      data: props.humidityHistory.slice(),
       borderColor: '#60a5fa',
       backgroundColor: 'rgba(96,165,250,0.2)',
-      data: props.humidityHistory,
       tension: 0.4,
-    },
+    }
   ]
 }))
 
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
-  scales: {
-    y: {
-      beginAtZero: false,
-      ticks: { stepSize: 5 },
-    },
-  },
 }
 </script>
 
-<template>
-  <div>
-    <Line :data="chartData" :options="chartOptions" :key="chartKey" />
-  </div>
-</template>
-
 <style scoped>
-div {
-  height: 300px;
+canvas {
+  height: 100% !important;
 }
 </style>

@@ -11,10 +11,10 @@
       </div>
     </div>
     <LineChart
-      :temperatureHistory="temperatureHistory.slice()"
-      :humidityHistory="humidityHistory.slice()"
-      :labels="labels.slice()"
-    />
+      :temperatureHistory="temperatureHistory"
+      :humidityHistory="humidityHistory"
+      :labels="labels"
+/>
   </div>
 </template>
 
@@ -38,7 +38,7 @@ let socket = null
 onMounted(() => {
   const WS_URL =
   import.meta.env.MODE === 'development'
-    ? 'ws://localhost:8080/ws/'
+    ? 'ws://localhost:8080/ws'
     : `ws://${window.location.host}/ws/`
 
   const socket = new WebSocket(WS_URL)
@@ -62,7 +62,7 @@ onMounted(() => {
     temperatureHistory.value.push(data.temperature)
     humidityHistory.value.push(data.humidity)
 
-    if (labels.value.length > 30) {
+    if (labels.value.length > 60) {
       labels.value.shift()
       temperatureHistory.value.shift()
       humidityHistory.value.shift()
@@ -76,6 +76,7 @@ onMounted(() => {
   socket.onclose = () => {
     console.log('❌ WebSocket closed')
   }
+
 })
 
 onBeforeUnmount(() => {
