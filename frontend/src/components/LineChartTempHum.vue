@@ -1,8 +1,8 @@
 <template>
-    <div style="height: 300px;">
+    <div class="chart-container" style="height: 300px;">
       <Line :data="chartData" :options="chartOptions" />
     </div>
-  </template>
+</template>
   
   <script setup>
   import { Line } from 'vue-chartjs'
@@ -64,3 +64,13 @@
   }
   </script>
   
+  <style scoped>
+  .chart-wrapper {
+    width: 100%;
+    max-width: 100%;
+    height: 300px;
+    margin: 2rem auto;
+    box-sizing: border-box;
+    overflow-x: auto;
+  }
+  </style>

@@ -1,8 +1,8 @@
 <template>
-    <div style="height: 300px;">
+    <div class="chart-container" style="height: 300px;">
       <Line :data="chartData" :options="chartOptions" />
     </div>
-  </template>
+</template>
   
   <script setup>
   import { Line } from 'vue-chartjs'
@@ -62,3 +62,10 @@
   }
   </script>
   
+  <style scoped>
+.chart-container {
+  width: 100%;        /* 🔧 親に追従 */
+  height: 300px;      /* 🔧 高さを固定すると描画安定 */
+  overflow-x: auto;   /* 🔧 はみ出し回避（任意） */
+}
+</style>

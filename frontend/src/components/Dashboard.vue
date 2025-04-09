@@ -72,7 +72,7 @@ onMounted(() => {
     pressureHistory.value.push(data.pressure)
     gasHistory.value.push(data.gas)
 
-    if (labels.value.length > 60) {
+    if (labels.value.length > 24) {
       labels.value.shift()
       temperatureHistory.value.shift()
       humidityHistory.value.shift()
@@ -98,14 +98,16 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .dashboard {
-  max-width: clamp(600px, 90vw, 960px);
+  width: clamp(320px, 90vw, 960px);
+  max-width: 1200px;
+  min-width: 600px;
+  border-radius: 16px;
   font-family: 'Helvetica Neue', sans-serif;
   text-align: center;
-  padding: 2vmax;
+  padding: 2rem;
   background-color: #f9fafb;
   min-height: 100vh;
-  max-width: 1980px;
-  width: 100%;
+  overflow-x: hidden; /* ← 念のための防御策 */
 }
 
 .title {
@@ -115,13 +117,15 @@ onBeforeUnmount(() => {
 }
 
 .sensor-card {
+  width: 60%;
   background: white;
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  width: 100%;
-  max-width: 360px;
   box-sizing: border-box;
+  margin: 1rem auto;
+  overflow-x: hidden; /* ← 念のための防御策 */
+
 }
 
 .value {

@@ -6,16 +6,19 @@ html, body {
   height: 100%;
   font-family: 'Helvetica Neue', sans-serif;
   background-color: #f9fafb;
+  overflow-y: auto;
 }
 
 #app {
   display: flex;
-  justify-content: center;
-  min-height: 100vh;
-  max-width: 1980px;
+  align-items: center;
+  justify-content: center;  
+  width: clamp(320px, 90vw, 960px);
   margin: 0 auto;
-  padding: 2rem;
+
+  padding: 1rem;
   font-weight: normal;
+  box-sizing: border-box;
 }
 
 a,
@@ -32,15 +35,20 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
+@media (max-width: 600px) {
+  .chart-container {
+    height: 240px;
+  }
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .sensor-card {
+    width: 100%;
+    padding: 1rem;
   }
 
   #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+    padding: 1rem;
   }
 }
