@@ -10,7 +10,7 @@ html, body {
 }
 
 #app {
-  display: flex;
+  display: block;
   align-items: center;
   justify-content: center;  
   width: clamp(320px, 90vw, 960px);
@@ -36,11 +36,9 @@ a,
 }
 
 @media (max-width: 600px) {
-  .chart-container {
-    height: 240px;
-  }
-  .title {
-    font-size: 1.5rem;
+  #app {
+    width: 100vw;
+    padding: 1rem;
   }
 
   .sensor-card {
@@ -48,7 +46,11 @@ a,
     padding: 1rem;
   }
 
-  #app {
-    padding: 1rem;
+  .chart-container {
+    height: 240px;
+  }
+
+  .title {
+    font-size: 1.5rem;
   }
 }

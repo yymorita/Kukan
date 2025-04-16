@@ -63,9 +63,12 @@
   </script>
   
   <style scoped>
-.chart-container {
-  width: 100%;        /* 🔧 親に追従 */
-  height: 300px;      /* 🔧 高さを固定すると描画安定 */
-  overflow-x: auto;   /* 🔧 はみ出し回避（任意） */
-}
+  .chart-container {
+    width: 100%;
+    max-width: 100%;
+    height: 300px;
+    margin: 2rem auto;
+    box-sizing: border-box;
+    overflow-x: auto;
+  }
 </style>
