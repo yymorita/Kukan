@@ -2,7 +2,7 @@
 import express from 'express'
 import http from 'http'
 import { WebSocketServer } from 'ws'
-import { insertReading } from './db.js'
+import { pool } from './db.js'
 
 const app = express()
 const server = http.createServer(app)
@@ -21,12 +21,15 @@ wss.on('connection', (ws, req) => {
   console.log('?? Web Socket Client Connected.')
   clients.add(ws)
 
-  ws.on('message', (message) => {
+  ws.on('message', async (message) => {
     try {
       const data = JSON.parse(message.toString())
-      console.log("?? Raw data:", message.toString())
       console.log('?? RECEIVE:', data)
 
+      const { temperature, humidity, pressure, gas } = data;
+      if ([temperature, humidity, pressure, gas].some(v => v === undefined)) {
+        return ws.send(JSON.stringify({ error: 'invalid payload' }));
+      }
       // 快適度判定ロジック
       const isComfortable =
         data.temperature >= 20 && data.temperature <= 26 &&
@@ -42,11 +45,14 @@ wss.on('connection', (ws, req) => {
         message: isComfortable ? 'Comfortable' : 'Unconfortable',
         timestamp: data.timestamp,
       }
-      const temperature = data.temperature
-      const humidity = data.humidity
-      const pressure = data.pressure
-      const gas = data.gas
-      insertReading({ temperature, humidity, pressure, gas })
+      const query = `
+      INSERT INTO sensor_data
+        (temperature, humidity, pressure, gas)
+        VALUES ($1, $2, $3, $4)
+        RETURNING id, created_at
+    `;
+      const values = [temperature, humidity, pressure, gas];
+      const { rows } = await pool.query(query, values);
       console.log(`?? Saving DB: ${temperature}°C / ${humidity}% / ${pressure}hPa / ${gas} ohms`)
       // フロントエンド接続クライアントにブロードキャスト
       clients.forEach(client => {
@@ -54,6 +60,7 @@ wss.on('connection', (ws, req) => {
           client.send(JSON.stringify(response))
         }
       })
+      ws.send(JSON.stringify({ status: 'ok', record: rows[0] }));
     } catch (err) {
       console.error('? JSON Parse error:', err.message)
     }

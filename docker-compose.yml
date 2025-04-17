@@ -1,17 +1,17 @@
 services:
-  # postgres:
-  #   image: postgres:16
-  #   container_name: kukan-postgres
-  #   restart: always
-  #   environment:
-  #     POSTGRES_USER: kukan_user
-  #     POSTGRES_PASSWORD: kukan_pass
-  #     POSTGRES_DB: kukan_db
-  # ports:
-  #   - "5432:5432"
-  # volumes:
-  #   - pgdata:/var/lib/postgresql/data
-  # - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  postgres:
+    image: postgres:16
+    container_name: kukan-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: kukan_user
+      POSTGRES_PASSWORD: kukan_pass
+      POSTGRES_DB: kukan_db
+    ports:
+    - "5432:5432"
+    volumes:
+    - pgdata:/var/lib/postgresql/data
+    - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   frontend:
     build:
@@ -43,6 +43,9 @@ services:
     volumes:
       - ./frontend/dist:/usr/share/nginx/html
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+
+volumes:
+  pgdata:
 
 # --- frontend/Dockerfile ---
 # FROM node:20-alpine

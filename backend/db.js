@@ -1,23 +1,12 @@
-// backend/db.js
-import Database from 'better-sqlite3'
+import pkg from 'pg';
+const { Pool } = pkg;
 
-const db = new Database('kukan.db')
+export const pool = new Pool({
+  connectionString: "postgres://kukan_user:kukan_pass@postgres:5432/kukan_db",
+  ssl: false
+});
 
-// テーブル初期化
-db.prepare(`
-  CREATE TABLE IF NOT EXISTS readings (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    temperature REAL,
-    humidity REAL,
-    pressure REAL,
-    gas REAL
-  )
-`).run()
-
-export function insertReading({ temperature, humidity, pressure, gas }) {
-  db.prepare(`
-    INSERT INTO readings (temperature, humidity, pressure, gas)
-    VALUES (?, ?, ?, ?)
-  `).run(temperature, humidity, pressure, gas)
-}
+// 失敗した場合にすぐ分かるようログ
+pool.on('error', (err) => {
+  console.error('PostgreSQL client error', err);
+});
