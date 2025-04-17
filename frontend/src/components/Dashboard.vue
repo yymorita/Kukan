@@ -10,6 +10,8 @@
         {{ statusMessage }}
       </div>
     </div>
+    <h2>Today's Chart</h2>
+    <TodayChart />
     <LineChartTempHum
       :temperatureHistory="temperatureHistory"
       :humidityHistory="humidityHistory"
@@ -27,6 +29,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import LineChartTempHum from './LineChartTempHum.vue'
 import LineChartPressGas from './LineChartPressGas.vue'
+import TodayChart from './TodayChart.vue';
 
 const temperature = ref(0)
 const humidity = ref(0)

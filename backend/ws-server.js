@@ -3,6 +3,7 @@ import express from 'express'
 import http from 'http'
 import { WebSocketServer } from 'ws'
 import { pool } from './db.js'
+import apiRouter from './api.js';
 
 const app = express()
 const server = http.createServer(app)
@@ -12,6 +13,9 @@ const wss = new WebSocketServer({ server , path: '/ws' })
 app.get('/', (req, res) => {
   res.send('Kukan WebSocket starting.')
 })
+
+app.use('/api', apiRouter);
+app.listen(3000, () => console.log('REST API on :3000'));
 
 // WebSocketクライアント（Vue）一覧
 const clients = new Set()
