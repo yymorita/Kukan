@@ -20,5 +20,5 @@ jobs:
           username: 'Kukan Bot'
           content: |
             🌤️ **Daily environment summary**
-            • Avg Temp: 23 °C  
-            • Humidity: 45 %
+            - Avg Temp: 23 °C  
+            - Humidity: 45 %
