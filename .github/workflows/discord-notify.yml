@@ -1,0 +1,24 @@
+name: Daily Discord Notification
+
+on:
+  # 手動起動ボタンも付けておくとテストが楽
+  workflow_dispatch:
+  schedule:
+    # 00:00 UTC = 09:00 JST
+    - cron: '0 0 * * *'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    concurrency: discord-notify
+
+    steps:
+      - name: Send message to Discord
+        uses: tsickert/discord-webhook@v7
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+          username: 'Kukan Bot'
+          content: |
+            🌤️ **Daily environment summary**
+            • Avg Temp: 23 °C  
+            • Humidity: 45 %
