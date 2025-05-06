@@ -48,6 +48,7 @@ const chartData = computed(() => ({
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
+  devicePixelRatio: 1,
   interaction: { mode: 'index', intersect: false },
   scales: {
     y: { beginAtZero: false }

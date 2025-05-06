@@ -11,17 +11,17 @@
       </div>
     </div>
     <h2>Today's Chart</h2>
-    <TodayChart />
+    <!-- <TodayChart /> -->
     <LineChartTempHum
       :temperatureHistory="temperatureHistory"
       :humidityHistory="humidityHistory"
       :labels="labels"
     />
-    <LineChartPressGas
+    <!-- <LineChartPressGas
       :pressureHistory="pressureHistory"
       :gasHistory="gasHistory"
       :labels="labels"
-    />
+    /> -->
   </div>
 </template>
 
